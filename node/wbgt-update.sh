@@ -1,5 +1,5 @@
 while :
 do
   node update.mjs
-  sleep 3000
+  sleep 300
 done

@@ -100,11 +100,33 @@ const decodeCharsCSV = () => {
   util.writeCSV("../data/area", res);
 };
 
+const fixArea = () => {
+  const org = util.readCSV("../data/area");
+  const area = util.csv2json(org);
+  const ss = new TextDecoder().decode(fs.readFileSync("../docs/areadata.pdf.txt")).split("\n").map(s => s.trim());
+  const find = id => {
+    const n = ss.indexOf(id);
+    if (n < n) {
+      throw new Error("not found! " + id);
+    }
+    return [...(ss[n + 1].split(" ")), ss[n + 2], ss[n + 3]];
+  };
+  for (const a of area) {
+    const s = find(a.地点番号);
+    [a.観測所名, a.よみがな, a.ローマ字表記, a.所在地] = s;
+    //console.log(a, s);
+    //break;
+  }
+  area.sort((a, b) => parseInt(a.地点番号) - parseInt(b.地点番号));
+  util.writeCSV("../data/area2", util.json2csv(area));
+};
+
 const main = async () => {
   // packCSV();
-  decodeCharsCSV();
+  // decodeCharsCSV();
+  // console.log("unmaps", unmaps);
   //console.log(String.fromCharCode(13352));
-  console.log("unmaps", unmaps);
+  fixArea();
 };
 main();
 
