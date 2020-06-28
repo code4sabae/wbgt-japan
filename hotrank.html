@@ -1,0 +1,45 @@
+<html>
+<head>
+<meta charset="utf-8"/>
+<title>暑さ予想ランキング</title>
+<meta property="og:title" content="暑さ予想ランキング"/>
+<meta property="og:description" content="暑さ予想ランキング"/>
+<link rel="apple-touch-icon" href="bedforinfection_icon.png"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta property="og:image"  content="https://code4sabae.github.io/bedforinfection/bedforinfection.png"/>
+<meta name="twitter:image" content="https://code4sabae.github.io/bedforinfection/bedforinfection.png"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="format-detection" content="telephone=no"/>
+<script type="module">
+
+window.onload = async () => {
+  const url = "https://code4sabae.github.io/wbgt-japan/data/prev15WG/latest.json";
+  const json = await (await fetch(url)).json();
+  console.log(json);
+
+  const urlarea = "https://code4sabae.github.io/wbgt-japan/data/area.json";
+  const area = await (await fetch(urlarea)).json();
+  console.log(area);
+};
+
+</script>
+</head>
+<body>
+
+
+<h1>暑さ予想ランキング</h1>
+
+<div>
+</div>
+
+<div class="credit">
+APP: CC BY <a href=https://fukuno.jig.jp/2794>福野泰介 - 厚生労働省提供 都道府県別 感染症病床数を<a href=https://app.sabae.cc/api/bedforinfection.json>JSON-API</a>化して公開</a> <a href="https://twitter.com/search?q=%23StopCOVID19JP">#StopCOVID19JP</a> (<a href=https://github.com/code4sabae/bedforinfection>src on GitHub</a>)<br>
+DATA: CC BY 「<a href=https://www.mhlw.go.jp/bunya/kenkou/kekkaku-kansenshou15/02-02.html>感染症指定医療機関の指定状況（平成31年4月1日現在）｜厚生労働省</a>」公開データをJSON-APIに加工して使用 (<a href=https://github.com/code4sabae/app_sabae_cc>src on GitHub</a>)<br>
+DATA: CC BY 「<a href=http://www.hospital.or.jp/shibu_kaiin/member.cgi>日本病院会｜都道府県別会員一覧インデックス</a>」公開データのリンク追加 → <a href=data/hospitals-japan.csv>CSV</a> / <a href=data/hospitals-japan.sjis.csv>CSV for Excel</a> / <a href=data/hospitals-japan.json>JSON</a> (<a href=https://github.com/code4sabae/bedforinfection>src on GitHub</a>)<br>
+LAYOUT: CC0 <a href=https://hackmd.io/7m2A33zJSWq6DA9lYbvtpQ>カラム地図</a> (<a href=https://github.com/tabularmaps/hq>カラム地図 / TabularMaps on Github</a> / <a href=https://fukuno.jig.jp/2434>7x7都道府県</a>)<br>
+
+<img id=qrcode><script>addEventListener("load", () => qrcode.src = "https://chart.apis.google.com/chart?chs=140x140&cht=qr&chl=" + encodeURIComponent(document.location))</script><br>
+</div>
+
+</body>
+</html>

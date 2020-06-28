@@ -24,20 +24,25 @@ const downloadPrev = async (force) => {
   const url = `https://www.wbgt.env.go.jp/prev15WG/dl/yohou_all.csv`;
   const res = await fetch(url);
   if (res.status === 200) {
-
     const scsv = await res.text();
     const csv = util.decodeCSV(scsv);
+
+    csv[0][0] = "id";
+    csv[0][1] = "dt";
+    const csv2 = csv.map(a => a.map(s => s.trim()));
+
     util.mkdirSyncForFile(fn);
-    util.writeCSV(fn, csv);
-    util.writeCSV(fn2, csv);
+    util.writeCSV(fn, csv2);
+    util.writeCSV(fn2, csv2);
     return true;
   }
   return false;
 };
 
+import.meta.main = import.meta.url.endsWith("/downloadPrev.mjs");
+console.log(import.meta);
 if (import.meta.main) {
   downloadPrev(true);
 }
 
 export { downloadPrev };
-
