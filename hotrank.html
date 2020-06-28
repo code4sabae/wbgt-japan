@@ -25,7 +25,8 @@ table {
 }
 #main {
   width: 100%;
-  overflow-x: scroll;
+  height: 70vh;
+  overflow: scroll;
 }
 .credit {
   font-size: 80%;
@@ -91,7 +92,7 @@ const setBackground = (td, num) => {
 };
 
 const showRanking = (rank, lastUpdate, findArea) => {
-  const nrank = 20;
+  const nrank = 840;
   const formatDateTime = d => {
     return d.substring(4, 6) + "/" + d.substring(6, 8) + " " + d.substring(8, 10) + ":00";
   };
