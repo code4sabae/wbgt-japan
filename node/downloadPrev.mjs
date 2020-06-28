@@ -2,7 +2,7 @@
 //import util from "https://taisukef.github.io/denolib/util.mjs";
 
 // for Node
-import util from "../../nodeutil/util.mjs";
+import util from "./util.mjs";
 import fetch from "node-fetch";
 
 const DIR = "prev15WG";
