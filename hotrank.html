@@ -1,15 +1,39 @@
 <html>
 <head>
 <meta charset="utf-8"/>
-<title>暑さ予想ランキング</title>
-<meta property="og:title" content="暑さ予想ランキング"/>
-<meta property="og:description" content="暑さ予想ランキング"/>
-<link rel="apple-touch-icon" href="bedforinfection_icon.png"/>
+<title>暑さ予測ランキング - 環境省WBGTオープンデータ</title>
+<meta property="og:title" content="暑さ予測ランキング"/>
+<meta property="og:description" content="暑さ予測ランキング"/>
+<link rel="apple-touch-icon" href="hotrank-icon.png"/>
 <meta name="twitter:card" content="summary_large_image"/>
-<meta property="og:image"  content="https://code4sabae.github.io/bedforinfection/bedforinfection.png"/>
-<meta name="twitter:image" content="https://code4sabae.github.io/bedforinfection/bedforinfection.png"/>
+<meta property="og:image"  content="https://code4sabae.github.io/wbgt-japan/hotrank.png"/>
+<meta name="twitter:image" content="https://code4sabae.github.io/wbgt-japan/hotrank.png"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <meta name="format-detection" content="telephone=no"/>
+<style>
+body {
+  font-family: sans-serif;
+}
+td, th {
+  padding: .2em .3em;
+  white-space: nowrap;
+  border: 1px solid gray;
+  font-size: 80%;
+}
+table {
+  border-collapse: collapse;
+}
+#main {
+  width: 100%;
+  overflow-x: scroll;
+}
+.credit {
+  font-size: 80%;
+}
+a {
+  color: gray !important;
+}
+</style>
 <script type="module">
 
 window.onload = async () => {
@@ -19,7 +43,90 @@ window.onload = async () => {
 
   const urlarea = "https://code4sabae.github.io/wbgt-japan/data/area.json";
   const area = await (await fetch(urlarea)).json();
+  const findArea = (id) => area.find(a => a.地点番号 === id);
   console.log(area);
+
+  const lastUpdate = json[0].dt;
+
+  const dts = [];
+  for (const a in json[0]) {
+    if (a.length > 3) {
+      dts.push(a);
+    }
+  }
+
+  const rank = {};
+  for (const dt of dts) {
+    const list = [];
+    for (const d of json) {
+      list.push([d[dt], d.id]);
+    }
+    list.sort((a, b) => b[0] - a[0]);
+    rank[dt] = list;
+  }
+
+  // console.log(rank);
+  showRanking(rank, lastUpdate, findArea);
+};
+
+/*
+    31以上 危険
+    28以上 厳重警戒
+    25以上 警戒
+    21以上 注意
+    21未満 ほぼ安全
+*/
+const setBackground = (td, num) => {
+  let color = "white";
+  if (num >= 31) {
+    color = `hsl(0,80%,70%)`;
+  } else if (num >= 28) {
+    color = `hsl(0,80%,80%)`;
+  } else if (num >= 25) {
+    color = `hsl(60,80%,90%)`;
+  } else if (num >= 21) {
+    color = `hsl(180,80%,90%)`;
+  }
+  td.style.backgroundColor = color;
+};
+
+const showRanking = (rank, lastUpdate, findArea) => {
+  const nrank = 20;
+  const formatDateTime = d => {
+    return d.substring(4, 6) + "/" + d.substring(6, 8) + " " + d.substring(8, 10) + ":00";
+  };
+
+  const c = tag => document.createElement(tag);
+  const tbl = c("table");
+  {
+    const tr = c("tr");
+    const th = c("th");
+    tr.appendChild(th);
+    for (const dt in rank) {
+      const th = c("th");
+      th.textContent = formatDateTime(dt);
+      tr.appendChild(th);
+    }
+    tbl.appendChild(tr);
+  }
+  for (let i = 0; i < nrank; i++) {
+    const tr = c("tr");
+    const th = c("th");
+    th.innerHTML = "暑さ予想<br>" + (i + 1) + "位";
+    tr.appendChild(th);
+    for (const dt in rank) {
+      const r = rank[dt][i];
+      const td = c("td");
+      const area = findArea(r[1]);
+      // console.log(area);
+      const wbgt = Math.floor(r[0] / 10);
+      td.innerHTML = wbgt + "℃<br>" + area.振興局 + " " + area.観測所名;
+      setBackground(td, wbgt);
+      tr.appendChild(td);
+    }
+    tbl.appendChild(tr);
+  }
+  main.appendChild(tbl);
 };
 
 </script>
@@ -27,16 +134,13 @@ window.onload = async () => {
 <body>
 
 
-<h1>暑さ予想ランキング</h1>
+<h1>暑さ予測ランキング - 環境省WBGTオープンデータ</h1>
 
-<div>
-</div>
+<div id="main"></div>
 
 <div class="credit">
-APP: CC BY <a href=https://fukuno.jig.jp/2794>福野泰介 - 厚生労働省提供 都道府県別 感染症病床数を<a href=https://app.sabae.cc/api/bedforinfection.json>JSON-API</a>化して公開</a> <a href="https://twitter.com/search?q=%23StopCOVID19JP">#StopCOVID19JP</a> (<a href=https://github.com/code4sabae/bedforinfection>src on GitHub</a>)<br>
-DATA: CC BY 「<a href=https://www.mhlw.go.jp/bunya/kenkou/kekkaku-kansenshou15/02-02.html>感染症指定医療機関の指定状況（平成31年4月1日現在）｜厚生労働省</a>」公開データをJSON-APIに加工して使用 (<a href=https://github.com/code4sabae/app_sabae_cc>src on GitHub</a>)<br>
-DATA: CC BY 「<a href=http://www.hospital.or.jp/shibu_kaiin/member.cgi>日本病院会｜都道府県別会員一覧インデックス</a>」公開データのリンク追加 → <a href=data/hospitals-japan.csv>CSV</a> / <a href=data/hospitals-japan.sjis.csv>CSV for Excel</a> / <a href=data/hospitals-japan.json>JSON</a> (<a href=https://github.com/code4sabae/bedforinfection>src on GitHub</a>)<br>
-LAYOUT: CC0 <a href=https://hackmd.io/7m2A33zJSWq6DA9lYbvtpQ>カラム地図</a> (<a href=https://github.com/tabularmaps/hq>カラム地図 / TabularMaps on Github</a> / <a href=https://fukuno.jig.jp/2434>7x7都道府県</a>)<br>
+APP: CC BY <a href=https://fukuno.jig.jp/2894>熱中症対策とオープンデータ</a> (<a href=https://github.com/code4sabae/wbgt-japan/>src on GitHub</a>)<br>
+DATA: CC BY 「<a href=https://www.wbgt.env.go.jp/data_service2.php>環境省の暑さ指数(WBGT)予測値等電子情報提供サービスについて</a>」を加工 <a href=https://code4sabae.github.io/wbgt-japan/data/prev15WG/latest.csv>CSV</a>/<a href=https://code4sabae.github.io/wbgt-japan/data/prev15WG/latest.json>JSON</a> (<a href=https://github.com/code4sabae/wbgt-japan/>src on GitHub</a>)<br>
 
 <img id=qrcode><script>addEventListener("load", () => qrcode.src = "https://chart.apis.google.com/chart?chs=140x140&cht=qr&chl=" + encodeURIComponent(document.location))</script><br>
 </div>

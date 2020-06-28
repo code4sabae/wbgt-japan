@@ -39,8 +39,10 @@ const downloadPrev = async (force) => {
   return false;
 };
 
-import.meta.main = import.meta.url.endsWith("/downloadPrev.mjs");
+const fn = import.meta.url.substring(import.meta.url.lastIndexOf("/"));
+import.meta.main = process.argv[1].endsWith(fn);
 console.log(import.meta);
+
 if (import.meta.main) {
   downloadPrev(true);
 }
