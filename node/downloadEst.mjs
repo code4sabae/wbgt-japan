@@ -43,7 +43,7 @@ const downloadEst = async (dlcnt) => {
 const fn = import.meta.url.substring(import.meta.url.lastIndexOf("/"));
 import.meta.main = process.argv[1].endsWith(fn);
 if (import.meta.main) {
-  downloadEst(100);
+  downloadEst(5);
 }
 
 export { downloadEst };
