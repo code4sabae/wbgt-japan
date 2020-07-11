@@ -11,7 +11,7 @@ const downloadPrev = async (force) => {
   const t = new Date();
   const y = t.getFullYear();
   const m = t.getMonth() + 1;
-  const d = t.getDay();
+  const d = t.getDate();
   const h = t.getHours();
 
   const ymdh = y + util.fix0(m, 2) + util.fix0(d, 2) + util.fix0(h, 2) + "00";

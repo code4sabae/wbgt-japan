@@ -64,7 +64,7 @@ const downloadMntrArea = async (id, dlcnt) => {
 const fn = import.meta.url.substring(import.meta.url.lastIndexOf("/"));
 import.meta.main = process.argv[1].endsWith(fn);
 if (import.meta.main) {
-  downloadMntr(100);
+  downloadMntr(1);
 }
 
 export { downloadMntr };
